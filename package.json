@@ -1,0 +1,20 @@
+{
+  "name": "com.kugimasa.unity-custom-ranking-template",
+  "version": "0.18.0",
+  "displayName": "Unity Custom Ranking Template",
+  "unity": "2020.3",
+  "description": "NCMBを用いたランキング実装用テンプレートです。",
+  "license": "MIT",
+  "licensesUrl": "https://github.com/kugimasa/UnityCustomRankingTemplate/blob/main/LICENSE",
+  "documentationUrl": "https://github.com/kugimasa/UnityCustomRankingTemplate/blob/main/README.md",
+  "author": {
+    "name": "kugimasa",
+    "url": "https://github.com/kugimasa"
+  },
+  "Template": [
+    {
+      "displayName": "Template Assets",
+      "path": "Assets"
+    }
+  ]
+}
