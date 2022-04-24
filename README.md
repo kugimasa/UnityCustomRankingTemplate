@@ -6,6 +6,10 @@ Unity1Weekをはじめとしたゲームジャムでのランキング機能と�
 
 ![Sample](https://user-images.githubusercontent.com/40158101/164978642-945155bd-f800-4aa7-9fa8-a24be57bc2d0.jpg)
 
+## 動作環境
+- Unity Version: 2020.3.21f1(LTS)にて動作確認済みです。
+- TextMeshProを使用しています。
+
 ## アセット構成
 - Prefabs
    - RankingCanvas.prefab: ランキングパネル本体を含んだCanvas
@@ -23,6 +27,7 @@ Unity1Weekをはじめとしたゲームジャムでのランキング機能と�
 
 
 ## 使用方法
+### バックエンド(NCMB)の設定
 1. [ニフクラ mobile backend クイックスタート](https://mbaas.nifcloud.com/doc/current/introduction/quickstart_unity.html)に沿って「APIキーの設定とSDKの初期化」まで設定を行います。
 2. NCBMのアプリケーション管理画面の「データストア」から新しいクラスを作成します。(クラス名は任意です)
 ![Setting](https://user-images.githubusercontent.com/40158101/164979966-da5e5986-5f19-47c5-aba2-9313948998b8.png)
@@ -32,8 +37,11 @@ Unity1Weekをはじめとしたゲームジャムでのランキング機能と�
 - UniqueUserId: ユーザの一意ID(自身のデータの色を変更するために必要です)
 - HighScore: ハイスコアデータ
 - UserName: ユーザー名
-4. [RankingUtils.cs](https://github.com/kugimasa/UnityCustomRankingTemplate/blob/main/Assets/Scripts/RankingUtils.cs) の`NCMBStorageKey`を 2. で設定したクラス名にします。 
+
+### アセットの設定
+1. [Releases](https://github.com/kugimasa/UnityCustomRankingTemplate/releases)よりunitypackageをダウンロードし、Unityにインポートします。
+2. [RankingUtils.cs](https://github.com/kugimasa/UnityCustomRankingTemplate/blob/main/Assets/Scripts/RankingUtils.cs) の`NCMBStorageKey`を 2. で設定したクラス名にします。 
 https://github.com/kugimasa/UnityCustomRankingTemplate/blob/2dc3af6eb44456d7253c683e9bce672eafb01533/Assets/Scripts/RankingUtils.cs#L9-L10
-5. [RankingCanvas.prefab](https://github.com/kugimasa/UnityCustomRankingTemplate/blob/main/Assets/Prefabs/RankingCanvas.prefab)をシーンに配置します。
-6. 以下のメソッドをデータを保存したいタイミングで呼び出します。
+3. [RankingCanvas.prefab](https://github.com/kugimasa/UnityCustomRankingTemplate/blob/main/Assets/Prefabs/RankingCanvas.prefab)をシーンに配置します。
+4. 以下のメソッドをデータを保存したいタイミングで呼び出します。
 https://github.com/kugimasa/UnityCustomRankingTemplate/blob/2dc3af6eb44456d7253c683e9bce672eafb01533/Assets/Scripts/RankingManager.cs#L57-L60
