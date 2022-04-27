@@ -17,5 +17,8 @@ namespace UnityCustomRankingTemplate.Scripts
 
         // 一度に取得するレコードの件数
         internal static readonly int MaxRecordNum = 100;
+        
+        // デフォルト名
+        internal static readonly string DefaultUserName = "Guest";
     }
 }

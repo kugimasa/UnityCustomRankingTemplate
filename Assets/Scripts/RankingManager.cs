@@ -16,7 +16,13 @@ namespace UnityCustomRankingTemplate.Scripts
         [SerializeField, Range(0, 500)] private float _scrollPadding = 100.0f;
         private readonly List<RankingRecord> _records = new List<RankingRecord>();
 
+        private void Start()
+        {
+            SetUniqueId();
+        }
+
         /// <summary>
+        /// ゲーム開始時に呼ぶ関数
         /// 一意IDのセット
         /// </summary>
         public void SetUniqueId()
@@ -57,7 +63,7 @@ namespace UnityCustomRankingTemplate.Scripts
         /// <summary>
         /// ランキングの送信
         /// </summary>
-        public void SendRanking(string name, int score)
+        public void SendRanking(int score)
         {
             // 一意IDに紐づいたデータを検索
             NCMBQuery<NCMBObject> query = new NCMBQuery<NCMBObject>(NCMBStorageKey);
@@ -74,7 +80,6 @@ namespace UnityCustomRankingTemplate.Scripts
                         NCMBObject obj = new NCMBObject(NCMBStorageKey);
                         obj[UniqueUserIdKey] = uniqueId;
                         obj[HighScoreKey] = score;
-                        obj[UserNameKey] = name;
                         obj.SaveAsync();
                     }
                     // ハイスコア更新の場合
@@ -82,14 +87,6 @@ namespace UnityCustomRankingTemplate.Scripts
                     else if (Convert.ToInt32(objList[0][HighScoreKey]) < score)
                     {
                         objList[0][HighScoreKey] = score;
-                        objList[0][UserNameKey] = name;
-                        objList[0].SaveAsync();
-                    }
-                    // 特にスコアの更新がない場合は
-                    // 名前の変更のみ行う
-                    else
-                    {
-                        objList[0][UserNameKey] = name;
                         objList[0].SaveAsync();
                     }
                 }
