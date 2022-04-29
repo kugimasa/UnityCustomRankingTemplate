@@ -320,6 +320,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50ce38a140ff4389bceb002fb3b0efe1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _badgeSprites:
+  - {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
   _badgeColors:
   - {r: 1, g: 0.9105691, b: 0.13679248, a: 1}
   - {r: 0.5935386, g: 0.714405, b: 0.735849, a: 1}
@@ -327,9 +332,9 @@ MonoBehaviour:
   - {r: 0.497152, g: 0.7924528, b: 0.73112005, a: 1}
   _badgeSize:
   - 90
-  - 85
   - 80
-  - 75
+  - 70
+  - 50
   _myColor: {r: 0.9622642, g: 0.17702031, b: 0.17702031, a: 1}
   _rankBadge: {fileID: 6739537791609143254}
   _dataText: {fileID: 6739537790141703743}

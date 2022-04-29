@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,13 +8,10 @@ namespace UnityCustomRankingTemplate.Scripts
 {
     public class RankingRecord : MonoBehaviour
     {
-        [Header("バッジカラー"), SerializeField] private Color[] _badgeColors = new Color[4];
-
-        [Header("ランキングバッジのサイズ"), SerializeField]
-        private float[] _badgeSize = new float[4];
-
-        [Header("自分のランキングデータカラー"), SerializeField]
-        private Color _myColor;
+        [Header("バッジ素材"), SerializeField] private List<Sprite> _badgeSprites = new List<Sprite>();
+        [Header("バッジカラー"), SerializeField] private List<Color> _badgeColors = new List<Color>();
+        [Header("ランキングバッジのサイズ"), SerializeField] private List<float> _badgeSize = new List<float>();
+        [Header("自分のランキングデータカラー"), SerializeField] private Color _myColor;
 
         [SerializeField] private GameObject _rankBadge;
         [SerializeField] private TextMeshProUGUI _dataText;
@@ -41,23 +40,23 @@ namespace UnityCustomRankingTemplate.Scripts
         /// </summary>
         private void SetRankingBadge(int rank)
         {
-            if (rank <= 3)
+            // 末尾のインデックスで初期化
+            int rankIndex = _badgeSize.Count - 1;
+            // 特殊な順位のインデックス
+            if (rank <= rankIndex)
             {
-                _rankBadge.GetComponent<RectTransform>().sizeDelta =
-                    new Vector2(_badgeSize[rank - 1], _badgeSize[rank - 1]);
-                _rankText.gameObject.GetComponent<RectTransform>().sizeDelta =
-                    new Vector2(_badgeSize[rank - 1], _badgeSize[rank - 1]);
-                _rankBadge.GetComponent<Image>().color = _badgeColors[rank - 1];
+                rankIndex = rank - 1;
             }
-            else
-            {
-                _rankBadge.GetComponent<RectTransform>().sizeDelta = new Vector2(_badgeSize[3], _badgeSize[3]);
-                _rankText.gameObject.GetComponent<RectTransform>().sizeDelta =
-                    new Vector2(_badgeSize[3], _badgeSize[3]);
-                _rankBadge.GetComponent<Image>().color = _badgeColors[3];
-            }
-
+            // バッジサイズの設定
+            float size = _badgeSize[rankIndex];
+            _rankBadge.GetComponent<RectTransform>().sizeDelta = new Vector2(size, size);
+            // バッジ素材の設定
+            Image badgeImage = _rankBadge.GetComponent<Image>();
+            badgeImage.sprite =_badgeSprites[rankIndex];
+            badgeImage.color = _badgeColors[rankIndex];
+            // 順位テキストの設定
             _rankText.text = rank.ToString();
+            _rankText.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(size, size);
         }
 
     }
