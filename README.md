@@ -8,7 +8,11 @@ Unity1Weekをはじめとしたゲームジャムでのランキング機能と�
 ![Sample](https://user-images.githubusercontent.com/40158101/165917150-f6296367-bd4b-413b-93e7-be762aece4df.jpg)
 
 ## 動作環境
-- Unity Version: 2020.3.21f1(LTS)にて動作確認済みです。
+- Unity Version: 以下のバージョンにて動作確認済みです。
+   - 2020.3.8f1(LTS) 
+   - 2020.3.21f1(LTS)
+   - 2021.3.1f1(LTS)
+   
 - TextMeshProを使用しています。
 - 事前にNCMBの設定が必要です。(詳しくは使用方法を参照してください)
 
