@@ -19,6 +19,7 @@ namespace UnityCustomRankingTemplate.Scripts
         private void Start()
         {
             SetUniqueId();
+            InitUserName();
         }
 
         /// <summary>
@@ -32,6 +33,16 @@ namespace UnityCustomRankingTemplate.Scripts
             {
                 Guid guid = Guid.NewGuid();
                 PlayerPrefs.SetString(UniqueUserIdKey, guid.ToString());
+                PlayerPrefs.Save();
+            }
+        }
+        
+        private void InitUserName()
+        {
+            if (!PlayerPrefs.HasKey(ClientUserNameKey))
+            {
+                // デフォルトのユーザ名をセット
+                PlayerPrefs.SetString(ClientUserNameKey, DefaultUserName);
                 PlayerPrefs.Save();
             }
         }
@@ -68,7 +79,8 @@ namespace UnityCustomRankingTemplate.Scripts
             // 一意IDに紐づいたデータを検索
             NCMBQuery<NCMBObject> query = new NCMBQuery<NCMBObject>(NCMBStorageKey);
             string uniqueId = PlayerPrefs.GetString(UniqueUserIdKey);
-            query.WhereEqualTo(UniqueUserIdKey, uniqueId);
+            string userName = PlayerPrefs.GetString(ClientUserNameKey);
+            query.WhereEqualTo(ClientUserNameKey, uniqueId);
             query.FindAsync((List<NCMBObject> objList, NCMBException e) =>
             {
                 // 取得に成功
@@ -79,6 +91,7 @@ namespace UnityCustomRankingTemplate.Scripts
                     {
                         NCMBObject obj = new NCMBObject(NCMBStorageKey);
                         obj[UniqueUserIdKey] = uniqueId;
+                        obj[UserNameKey] = userName;
                         obj[HighScoreKey] = score;
                         obj.SaveAsync();
                     }

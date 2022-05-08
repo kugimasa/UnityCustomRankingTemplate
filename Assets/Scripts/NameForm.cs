@@ -37,6 +37,11 @@ namespace UnityCustomRankingTemplate.Scripts
                 // デフォルトのユーザ名をセット
                 PlayerPrefs.SetString(ClientUserNameKey, DefaultUserName);
                 PlayerPrefs.Save();
+                _nameField.text = DefaultUserName;
+            }
+            else
+            {
+                _nameField.text = PlayerPrefs.GetString(ClientUserNameKey);
             }
         }
     }
