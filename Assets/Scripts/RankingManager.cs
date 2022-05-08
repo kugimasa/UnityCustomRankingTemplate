@@ -80,7 +80,7 @@ namespace UnityCustomRankingTemplate.Scripts
             NCMBQuery<NCMBObject> query = new NCMBQuery<NCMBObject>(NCMBStorageKey);
             string uniqueId = PlayerPrefs.GetString(UniqueUserIdKey);
             string userName = PlayerPrefs.GetString(ClientUserNameKey);
-            query.WhereEqualTo(ClientUserNameKey, uniqueId);
+            query.WhereEqualTo(UniqueUserIdKey, uniqueId);
             query.FindAsync((List<NCMBObject> objList, NCMBException e) =>
             {
                 // 取得に成功
