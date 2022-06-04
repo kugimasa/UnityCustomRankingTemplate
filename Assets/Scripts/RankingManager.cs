@@ -17,6 +17,8 @@ namespace UnityCustomRankingTemplate.Scripts
         private readonly List<RankingRecord> _records = new List<RankingRecord>();
 
         private string _uniqueUserId = "";
+        private bool _sendBusy = false;
+        private bool _fetchBusy = false;
 
         private void Start()
         {
@@ -86,8 +88,17 @@ namespace UnityCustomRankingTemplate.Scripts
         /// </summary>
         public void SendRanking(int score)
         {
+            // 重複送信防止
+            if (_sendBusy)
+            {
+                Debug.Log("ランキングデータ送信中のため処理されません");
+                return;
+            }
+            _sendBusy = true;
+            
             NCMBQuery<NCMBObject> query = new NCMBQuery<NCMBObject>(NCMBStorageKey);
             var userName = PlayerPrefs.GetString(ClientUserNameKey);
+
             // 一意IDに紐づいたデータを検索
             query.WhereEqualTo(UniqueUserIdKey, _uniqueUserId);
             query.FindAsync((List<NCMBObject> objList, NCMBException e) =>
@@ -116,6 +127,7 @@ namespace UnityCustomRankingTemplate.Scripts
                 {
                     Debug.LogWarning($"ランキングの送信に失敗しました: {e}");
                 }
+                _sendBusy = false;
             });
         }
 
@@ -124,6 +136,14 @@ namespace UnityCustomRankingTemplate.Scripts
         /// </summary>
         public void FetchRanking()
         {
+            // 重複取得防止
+            if (_fetchBusy)
+            {
+                Debug.Log("ランキングデータ取得中のため処理されません");
+                return;
+            }
+            _fetchBusy = true;
+            
             // ランキングリストの初期化
             // 接続中を表示
             var rectTrans = _rankingContentsPanel.gameObject.GetComponent<RectTransform>();
@@ -178,6 +198,7 @@ namespace UnityCustomRankingTemplate.Scripts
                     _statusText.text = "Failed";
                     Debug.LogWarning($"ランキングの取得に失敗しました: {e}");
                 }
+                _fetchBusy = false;
             });
         }
 
