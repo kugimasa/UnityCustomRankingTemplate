@@ -11,7 +11,7 @@ namespace UnityCustomRankingTemplate.Scripts
 
         private void Start()
         {
-            InitUserName();
+            SetUserNameText();
         }
 
         /// <summary>
@@ -20,23 +20,17 @@ namespace UnityCustomRankingTemplate.Scripts
         public void UpdateUserName()
         {
             string newName = _nameField.text;
-            // ユーザ名をローカルデータにセット
-            PlayerPrefs.SetString(ClientUserNameKey, newName);
-            PlayerPrefs.Save();
-            // NCMB上の名前を更新
+            // ユーザ名を更新
             _rankingManager.ChangeName(newName);
         }
 
         /// <summary>
-        /// ユーザ名入力欄の初期化
+        /// ユーザ名入力欄にテキストをセット
         /// </summary>
-        private void InitUserName()
+        private void SetUserNameText()
         {
             if (!PlayerPrefs.HasKey(ClientUserNameKey))
             {
-                // デフォルトのユーザ名をセット
-                PlayerPrefs.SetString(ClientUserNameKey, DefaultUserName);
-                PlayerPrefs.Save();
                 _nameField.text = DefaultUserName;
             }
             else

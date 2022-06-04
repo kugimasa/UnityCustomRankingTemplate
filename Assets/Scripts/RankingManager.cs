@@ -16,46 +16,52 @@ namespace UnityCustomRankingTemplate.Scripts
         [SerializeField, Range(0, 500)] private float _scrollPadding = 100.0f;
         private readonly List<RankingRecord> _records = new List<RankingRecord>();
 
+        private string _uniqueUserId = "";
+
         private void Start()
         {
-            SetUniqueId();
-            InitUserName();
+            // 初回起動時にPlayerPrefsを初期化
+            InitPlayerPrefs();
         }
 
         /// <summary>
-        /// ゲーム開始時に呼ぶ関数
-        /// 一意IDのセット
+        /// 初回起動時にユーザデータを初期化する
         /// </summary>
-        public void SetUniqueId()
+        private void InitPlayerPrefs()
         {
-            // 初回起動時のみ処理
+            string uniqueId = "invalid id";
+            // 初回起動時のみ初期化
             if (!PlayerPrefs.HasKey(UniqueUserIdKey))
             {
+                // ユーザデータと紐づけるための一意ID
                 Guid guid = Guid.NewGuid();
-                PlayerPrefs.SetString(UniqueUserIdKey, guid.ToString());
-                PlayerPrefs.Save();
-            }
-        }
-        
-        private void InitUserName()
-        {
-            if (!PlayerPrefs.HasKey(ClientUserNameKey))
-            {
+                uniqueId = guid.ToString();
+                PlayerPrefs.SetString(UniqueUserIdKey, uniqueId);
                 // デフォルトのユーザ名をセット
                 PlayerPrefs.SetString(ClientUserNameKey, DefaultUserName);
                 PlayerPrefs.Save();
             }
+            else
+            {
+                uniqueId = PlayerPrefs.GetString(UniqueUserIdKey);
+            }
+            // 一意IDのキャッシュ
+            _uniqueUserId = uniqueId;
         }
 
         /// <summary>
-        /// 名前に変更があった場合データベースの名前も変更
+        /// ローカルデータ、データベースの名前を更新する
         /// </summary>
-        public void ChangeName(string name)
+        public void ChangeName(string newName)
         {
+            // ローカルデータ上のユーザ名を更新
+            PlayerPrefs.SetString(ClientUserNameKey, newName);
+            PlayerPrefs.Save();
+            
+            // データベース上のユーザ名を更新
             NCMBQuery<NCMBObject> query = new NCMBQuery<NCMBObject>(NCMBStorageKey);
-            string uniqueId = PlayerPrefs.GetString(UniqueUserIdKey);
             // 一意IDに紐づいたデータを検索
-            query.WhereEqualTo(UniqueUserIdKey, uniqueId);
+            query.WhereEqualTo(UniqueUserIdKey, _uniqueUserId);
             query.FindAsync((List<NCMBObject> objList, NCMBException e) =>
             {
                 // 取得に成功
@@ -64,9 +70,13 @@ namespace UnityCustomRankingTemplate.Scripts
                     // 既にスコアデータが存在している場合のみ変更
                     if (objList.Count != 0)
                     {
-                        objList[0][UserNameKey] = name;
+                        objList[0][UserNameKey] = newName;
                         objList[0].SaveAsync();
                     }
+                }
+                else
+                {
+                    Debug.LogWarning($"ユーザ名の変更に失敗しました: {e}");
                 }
             });
         }
@@ -78,9 +88,8 @@ namespace UnityCustomRankingTemplate.Scripts
         {
             // 一意IDに紐づいたデータを検索
             NCMBQuery<NCMBObject> query = new NCMBQuery<NCMBObject>(NCMBStorageKey);
-            string uniqueId = PlayerPrefs.GetString(UniqueUserIdKey);
             string userName = PlayerPrefs.GetString(ClientUserNameKey);
-            query.WhereEqualTo(UniqueUserIdKey, uniqueId);
+            query.WhereEqualTo(UniqueUserIdKey, _uniqueUserId);
             query.FindAsync((List<NCMBObject> objList, NCMBException e) =>
             {
                 // 取得に成功
@@ -90,7 +99,7 @@ namespace UnityCustomRankingTemplate.Scripts
                     if (objList.Count == 0)
                     {
                         NCMBObject obj = new NCMBObject(NCMBStorageKey);
-                        obj[UniqueUserIdKey] = uniqueId;
+                        obj[UniqueUserIdKey] = _uniqueUserId;
                         obj[UserNameKey] = userName;
                         obj[HighScoreKey] = score;
                         obj.SaveAsync();
@@ -102,6 +111,10 @@ namespace UnityCustomRankingTemplate.Scripts
                         objList[0][HighScoreKey] = score;
                         objList[0].SaveAsync();
                     }
+                }
+                else
+                {
+                    Debug.LogWarning($"ランキングの送信に失敗しました: {e}");
                 }
             });
         }
@@ -150,11 +163,7 @@ namespace UnityCustomRankingTemplate.Scripts
                             new Vector2(rectTrans.sizeDelta.x, rectTrans.sizeDelta.y + _scrollPadding);
 
                         // 自分のスコアかの判定
-                        bool isMyRecord = false;
-                        if (PlayerPrefs.HasKey(UniqueUserIdKey))
-                        {
-                            isMyRecord = objList[i][UniqueUserIdKey].ToString() == PlayerPrefs.GetString(UniqueUserIdKey);
-                        }
+                        bool isMyRecord = objList[i][UniqueUserIdKey].ToString() == _uniqueUserId;
 
                         record.SetRecord(objList[i][UserNameKey].ToString(), Convert.ToInt32(objList[i][HighScoreKey]),
                             rank, isMyRecord);
@@ -165,15 +174,19 @@ namespace UnityCustomRankingTemplate.Scripts
                 else
                 {
                     _statusText.text = "Failed";
+                    Debug.LogWarning($"ランキングの取得に失敗しました: {e}");
                 }
             });
         }
 
+        /// <summary>
+        /// レコードのクリア
+        /// </summary>
         private void ClearRecords()
         {
-            for (int i = 0; i < _records.Count; i++)
+            foreach (var t in _records)
             {
-                Destroy(_records[i].gameObject);
+                Destroy(t.gameObject);
             }
 
             _records.Clear();
