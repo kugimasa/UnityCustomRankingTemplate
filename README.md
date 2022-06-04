@@ -14,7 +14,7 @@ Unity1Weekをはじめとしたゲームジャムでのランキング機能と�
    - 2021.3.1f1(LTS)
    
 - TextMeshProを使用しています。
-- 事前にNCMBの設定が必要です。(詳しくは使用方法を参照してください)
+- 事前にNCMBの設定が必要です。(詳しくは[使用方法](https://github.com/kugimasa/UnityCustomRankingTemplate#%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95)を参照してください)
 
 ## アセット構成
 - Prefabs
@@ -24,6 +24,8 @@ Unity1Weekをはじめとしたゲームジャムでのランキング機能と�
      - ScoreSender.prefab: スコアをデータベースに送信するボタン
      - NameForm.prefab: ユーザ名設定用の入力フォーム 
   - RankingRecord.prefab: データレコード用のPrefab
+- Sample
+  - Ranking.unity: サンプルシーン
 - Scripts
    - [RankingManager.cs](https://github.com/kugimasa/UnityCustomRankingTemplate/blob/main/Assets/Scripts/RankingManager.cs): ランキングのデータ操作を行うためのクラス
    - [ScoreSender.cs](https://github.com/kugimasa/UnityCustomRankingTemplate/blob/main/Assets/Scripts/ScoreSender.cs): スコアをデータベースに送信するためのクラス
@@ -32,6 +34,7 @@ Unity1Weekをはじめとしたゲームジャムでのランキング機能と�
    - [RankingUtils.cs](https://github.com/kugimasa/UnityCustomRankingTemplate/blob/main/Assets/Scripts/RankingUtils.cs): ランキング用のキーなどを管理するstaticクラス
 
 ## 特徴
+- 好きなタイミングでランキングデータを保存できます。
 - 自身のランキングデータの色をカスタマイズできます。
 - 順位に応じて、バッジの素材、色、サイズをカスタマイズできます。
 - スコアが同じユーザは同じ順位になります。
@@ -60,18 +63,29 @@ Unity1Weekをはじめとしたゲームジャムでのランキング機能と�
 ```
 3. [RankingCanvas.prefab](https://github.com/kugimasa/UnityCustomRankingTemplate/blob/main/Assets/Prefabs/RankingCanvas.prefab)をシーンに配置します。
 
+### RankingCanvas内のPrefabについての説明
+
 #### RankingFetcher
-RankingPanelを開き、取得したランキングデータを表示します。
+ボタンクリックでRankingPanelを開き、取得したランキングデータを表示します。
 
 #### NameForm
 入力フォームにユーザ名を入力し、Saveボタンを押すことでユーザ名を更新します。
-データベースも更新されます。確認するには「FETCH RANKING」を押してください。
+データベースも更新されます。確認するにはRankingFetcherを押してください。
 
 #### ScoreSender
 インスペクターで設定されたスコアデータをデータベースに送信します。
 スコア更新(現状のスコアよりハイスコア)がない場合は上書きされません。
 
 <img width="500" alt="image" src="https://user-images.githubusercontent.com/40158101/165920742-aff4837f-4c56-4f37-a047-e6f10dd019c7.png">
+
+### Q & A
+##### Q: 特定のタイミングでスコアを保存するにはどうすればよいでしょうか？
+A: データを保存したいタイミングで
+[RankingManager.SendRanking](https://github.com/kugimasa/UnityCustomRankingTemplate/blob/22779ba417948e86f70ab508fe15ebd4d825fd66/Assets/Scripts/RankingManager.cs#L84-L87)を呼んでください。
+
+##### Q: 一度保存したユーザ名は変更できますか？
+A: [RankingManager.ChangeName](https://github.com/kugimasa/UnityCustomRankingTemplate/blob/main/Assets/Scripts/RankingManager.cs#L55)を呼ぶことでローカルとデータベース上のユーザ名を変更できます。スコア送信の際にはローカル(PlayerPrefs)に保存されたユーザ名に紐付けてスコアを送信しています。そのため、スコア送信以前にユーザ名が設定されていなかった場合は[デフォルト名](https://github.com/kugimasa/UnityCustomRankingTemplate/blob/22779ba417948e86f70ab508fe15ebd4d825fd66/Assets/Scripts/RankingUtils.cs#L22)で登録されます。
+
 
 ## その他
 RankingCanvasはあくまで実装例なので自由にカスタマイズしてください。
