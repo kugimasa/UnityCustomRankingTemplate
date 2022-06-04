@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -41,22 +40,31 @@ namespace UnityCustomRankingTemplate.Scripts
         private void SetRankingBadge(int rank)
         {
             // 末尾のインデックスで初期化
-            int rankIndex = _badgeSize.Count - 1;
+            var rankIndex = _badgeSize.Count - 1;
             // 特殊な順位のインデックス
             if (rank <= rankIndex)
             {
                 rankIndex = rank - 1;
             }
             // バッジサイズの設定
-            float size = _badgeSize[rankIndex];
+            var size = _badgeSize[rankIndex];
             _rankBadge.GetComponent<RectTransform>().sizeDelta = new Vector2(size, size);
             // バッジ素材の設定
-            Image badgeImage = _rankBadge.GetComponent<Image>();
+            var badgeImage = _rankBadge.GetComponent<Image>();
             badgeImage.sprite =_badgeSprites[rankIndex];
             badgeImage.color = _badgeColors[rankIndex];
             // 順位テキストの設定
             _rankText.text = rank.ToString();
             _rankText.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(size, size);
+        }
+        
+        /// <summary>
+        /// レコードの保持しているデータを返す
+        /// </summary>
+        /// <returns>{0}: _userName, {1}: _score</returns>
+        public (string, int) GetRecordData()
+        {
+            return (_userName, _score);
         }
 
     }

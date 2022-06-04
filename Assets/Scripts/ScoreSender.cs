@@ -2,7 +2,6 @@ using UnityEngine;
 
 namespace UnityCustomRankingTemplate.Scripts
 {
-    using static RankingUtils;
     public class ScoreSender : MonoBehaviour
     {
 

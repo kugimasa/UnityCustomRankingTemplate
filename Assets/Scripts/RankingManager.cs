@@ -29,7 +29,7 @@ namespace UnityCustomRankingTemplate.Scripts
         /// </summary>
         private void InitPlayerPrefs()
         {
-            string uniqueId = "invalid id";
+            var uniqueId = "invalid id";
             // 初回起動時のみ初期化
             if (!PlayerPrefs.HasKey(UniqueUserIdKey))
             {
@@ -86,9 +86,9 @@ namespace UnityCustomRankingTemplate.Scripts
         /// </summary>
         public void SendRanking(int score)
         {
-            // 一意IDに紐づいたデータを検索
             NCMBQuery<NCMBObject> query = new NCMBQuery<NCMBObject>(NCMBStorageKey);
-            string userName = PlayerPrefs.GetString(ClientUserNameKey);
+            var userName = PlayerPrefs.GetString(ClientUserNameKey);
+            // 一意IDに紐づいたデータを検索
             query.WhereEqualTo(UniqueUserIdKey, _uniqueUserId);
             query.FindAsync((List<NCMBObject> objList, NCMBException e) =>
             {
@@ -124,11 +124,13 @@ namespace UnityCustomRankingTemplate.Scripts
         /// </summary>
         public void FetchRanking()
         {
+            // ランキングリストの初期化
+            // 接続中を表示
             var rectTrans = _rankingContentsPanel.gameObject.GetComponent<RectTransform>();
             ClearRecords();
             _statusText.text = "Loading ...";
-            // ランキングリストの初期化
-            // 接続中を表示
+
+            // データの取得
             NCMBQuery<NCMBObject> query = new NCMBQuery<NCMBObject>(NCMBStorageKey);
             query.OrderByDescending(HighScoreKey);
             query.Limit = MaxRecordNum;
@@ -144,7 +146,7 @@ namespace UnityCustomRankingTemplate.Scripts
                         return;
                     }
 
-                    int rank = 1;
+                    var rank = 1;
                     // 取得したデータのリスト
                     for (int i = 0; i < objList.Count; i++)
                     {
@@ -157,8 +159,8 @@ namespace UnityCustomRankingTemplate.Scripts
                             rank++;
                         }
 
-                        // 情報の表示
-                        RankingRecord record = Instantiate(_rankingRecord, _rankingContentsPanel);
+                        // ランキングレコードの表示
+                        var record = Instantiate(_rankingRecord, _rankingContentsPanel);
                         rectTrans.sizeDelta =
                             new Vector2(rectTrans.sizeDelta.x, rectTrans.sizeDelta.y + _scrollPadding);
 
