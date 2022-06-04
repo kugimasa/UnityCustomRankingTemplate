@@ -163,6 +163,7 @@ namespace UnityCustomRankingTemplate.Scripts
                     if (objList.Count == 0)
                     {
                         _statusText.text = "No Data";
+                        _fetchBusy = false;
                         return;
                     }
 
