@@ -485,7 +485,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   applicationKey: "NCMB\u30AF\u30A4\u30C3\u30AF\u30B9\u30BF\u30FC\u30C8\u3088\u308A\u8A2D\u5B9A\u3057\u305F\u30AD\u30FC"
-  clientKey: "NCMB\u30AF\u30A4\u30C3\u30AF\u30B9\u30BF\u30FC\u30C8\u8A2D\u5B9A\u3088\u308A\u8A2D\u5B9A\u3057\u305F\u30AD\u30FC"
+  clientKey: "NCMB\u30AF\u30A4\u30C3\u30AF\u30B9\u30BF\u30FC\u30C8\u3088\u308A\u8A2D\u5B9A\u3057\u305F\u30AD\u30FC"
   usePush: 0
   useAnalytics: 0
   responseValidation: 0
